@@ -14,10 +14,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.music.helpers.AppConstants.APPLICATION_JSON;
+import static com.example.music.helpers.AppConstants.APP_FORM;
 import static com.example.music.helpers.AppConstants.APP_JSON;
 import static com.example.music.helpers.AppConstants.AUTHORIZATION;
 import static com.example.music.helpers.AppConstants.BEARER;
-import static com.example.music.helpers.AppConstants.CONTENT_TYPE;
+import static com.example.music.helpers.AppConstants.CONTENT_TYPE_HEADER;
+import static com.example.music.helpers.AppConstants.GATEWAY_KEY;
+import static com.example.music.helpers.AppConstants.GATEWAY_KEY_HEADER;
 
 /**
  * VolleyRequest.java
@@ -48,7 +51,7 @@ public class VolleyRequestHelper {
     }
 
     /**
-     * Request songs List response from the Web API.
+     * Request songs list request.
      *
      * @param requestName   the String refers the request name
      * @param webserviceUrl the String refers the web service URL.
@@ -71,7 +74,7 @@ public class VolleyRequestHelper {
             @Override
             public Map<String, String> getHeaders() {
                 HashMap<String, String> headers = new HashMap<>();
-                headers.put(CONTENT_TYPE, APP_JSON);
+                headers.put(CONTENT_TYPE_HEADER, APP_JSON);
                 headers.put(AUTHORIZATION, BEARER + authToken);
                 return headers;
             }
@@ -79,6 +82,38 @@ public class VolleyRequestHelper {
             @Override
             public String getBodyContentType() {
                 return APPLICATION_JSON;
+            }
+
+        };
+        // Adding String request to request queue
+        addToRequestQueue(stringRequest, requestName);
+    }
+
+    /**
+     * Update token request.
+     *
+     * @param requestName   the String refers the request name
+     * @param webserviceUrl the String refers the web service URL.
+     * @param webMethod     the integer indicates the web method.
+     */
+    public void updateTokenRequestString(final String requestName,
+                                         final String webserviceUrl,
+                                         final int webMethod) {
+        StringRequest stringRequest = new StringRequest(webMethod,
+                webserviceUrl,
+                response ->
+                        mRequestCompletedListener.onRequestCompleted(
+                                requestName, true, response, null)
+                , error ->
+                mRequestCompletedListener.onRequestCompleted(
+                        requestName, false, null, error.getMessage())) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put(CONTENT_TYPE_HEADER, APP_FORM);
+                headers.put(GATEWAY_KEY_HEADER, GATEWAY_KEY);
+                return headers;
             }
 
         };
