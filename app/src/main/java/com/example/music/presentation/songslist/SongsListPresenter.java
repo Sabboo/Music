@@ -74,7 +74,7 @@ public class SongsListPresenter implements SongsListContract.Presenter {
             mSongsListView.showToast("UnsupportedEncodingException - Bad Encoding at loadSongs - Presenter");
         }
         mSongsListView.setLoadingIndicator(true);
-        volleyRequestHelper.songsListRequestString(AppConstants.REQUEST_SONGS,
+        volleyRequestHelper.songsListRequestString(AppConstants.REQUEST_SONGS_NAME,
                 String.format(AppConstants.URL_SONGS, query),
                 token,
                 Request.Method.GET);
@@ -83,6 +83,6 @@ public class SongsListPresenter implements SongsListContract.Presenter {
     @Override
     public void unsubscribe() {
         mSongsListView = null;
-        volleyRequestHelper.cancelPendingRequests(AppConstants.REQUEST_SONGS);
+        volleyRequestHelper.cancelPendingRequests(AppConstants.REQUEST_SONGS_NAME);
     }
 }

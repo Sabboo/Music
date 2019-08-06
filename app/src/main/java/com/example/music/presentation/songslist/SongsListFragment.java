@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.music.R;
 import com.example.music.databinding.FragmentSongsListBinding;
 import com.example.music.helpers.ActivityUtils;
+import com.example.music.helpers.SharedPreferenceHelper;
 import com.example.music.model.Song;
 
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ public class SongsListFragment extends Fragment implements SongsListContract.Vie
         super.onViewCreated(view, savedInstanceState);
         handleSearchEditTextQueries();
         handleNoInternetConnectionScreen();
+        mBinding.etSearch.requestFocus();
     }
 
     private void handleSearchEditTextQueries() {
@@ -79,7 +81,7 @@ public class SongsListFragment extends Fragment implements SongsListContract.Vie
 
     private void performSearch() {
         String searchQuery = mBinding.etSearch.getText().toString().trim();
-        mPresenter.loadSongs(searchQuery, "C84648e3b-ca58-4c85-ad31-f50c41887a58");
+        mPresenter.loadSongs(searchQuery, SharedPreferenceHelper.getPrefKeyAccessToken(getContext()));
     }
 
     private void handleNoInternetConnectionScreen() {
