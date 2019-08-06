@@ -1,6 +1,9 @@
 package com.example.music.model;
 
-public class Song {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Song implements Parcelable {
 
     private int id;
 
@@ -11,6 +14,29 @@ public class Song {
     private Artist mainArtist;
 
     private Cover cover;
+
+    private String publishingDate;
+
+    protected Song(Parcel in) {
+        id = in.readInt();
+        type = in.readString();
+        title = in.readString();
+        mainArtist = in.readParcelable(Artist.class.getClassLoader());
+        cover = in.readParcelable(Cover.class.getClassLoader());
+        publishingDate = in.readString();
+    }
+
+    public static final Creator<Song> CREATOR = new Creator<Song>() {
+        @Override
+        public Song createFromParcel(Parcel in) {
+            return new Song(in);
+        }
+
+        @Override
+        public Song[] newArray(int size) {
+            return new Song[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -50,5 +76,28 @@ public class Song {
 
     public void setCover(Cover cover) {
         this.cover = cover;
+    }
+
+    public String getPublishingDate() {
+        return publishingDate.substring(0, 10);
+    }
+
+    public void setPublishingDate(String publishingDate) {
+        this.publishingDate = publishingDate;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(type);
+        dest.writeString(title);
+        dest.writeParcelable(mainArtist, flags);
+        dest.writeParcelable(cover, flags);
+        dest.writeString(publishingDate);
     }
 }
