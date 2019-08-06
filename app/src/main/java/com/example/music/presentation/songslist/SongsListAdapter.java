@@ -3,8 +3,6 @@ package com.example.music.presentation.songslist;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,14 +17,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.music.R;
+import com.example.music.helpers.DownloadImageTask;
 import com.example.music.model.Song;
-import com.example.music.presentation.songslist.SongsListAdapter.DownloadImageTask.ImageDownloaderListener;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.SoftReference;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
@@ -94,7 +88,7 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
             holder.itemImageView.setImageBitmap(imagesCache.get(String.valueOf(position)).get());
             switchImageProgressState(holder, INVISIBLE, VISIBLE);
         } else
-            new DownloadImageTask(new ImageDownloaderListener() {
+            new DownloadImageTask(new DownloadImageTask.ImageDownloaderListener() {
                 @Override
                 public void onImageDownloaded(Bitmap bitmap) {
                     holder.itemImageView.setImageBitmap(bitmap);
@@ -147,46 +141,6 @@ public class SongsListAdapter extends RecyclerView.Adapter<SongsListAdapter.Song
             this.itemTitleTextView = view.findViewById(R.id.tv_title);
             this.itemArtistTextView = view.findViewById(R.id.tv_artist);
             this.itemImageProgress = view.findViewById(R.id.fl_image_progress);
-        }
-    }
-
-    public static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-        public interface ImageDownloaderListener {
-            void onImageDownloaded(final Bitmap bitmap);
-
-            void onImageDownloadError();
-        }
-
-        private ImageDownloaderListener listener;
-
-        DownloadImageTask(final ImageDownloaderListener listener) {
-            this.listener = listener;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... urls) {
-            final String url = urls[0];
-            Bitmap bitmap = null;
-
-            try {
-                final InputStream inputStream = new URL(url).openStream();
-                bitmap = BitmapFactory.decodeStream(inputStream);
-            } catch (final MalformedURLException malformedUrlException) {
-                malformedUrlException.printStackTrace();
-            } catch (final IOException ioException) {
-                ioException.printStackTrace();
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap downloadedBitmap) {
-            if (null != downloadedBitmap) {
-                listener.onImageDownloaded(downloadedBitmap);
-            } else {
-                listener.onImageDownloadError();
-            }
         }
     }
 

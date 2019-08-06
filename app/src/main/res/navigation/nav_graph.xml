@@ -29,5 +29,9 @@
         android:id="@+id/songDetailsFragment"
         android:name="com.example.music.presentation.songdetails.SongDetailsFragment"
         android:label="fragment_song_details"
-        tools:layout="@layout/fragment_song_details" />
+        tools:layout="@layout/fragment_song_details">
+        <argument
+            android:name="SongArgument"
+            app:argType="com.example.music.model.Song" />
+    </fragment>
 </navigation>

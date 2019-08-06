@@ -139,11 +139,11 @@ public class SongsListFragment extends Fragment implements SongsListContract.Vie
 
     @Override
     public void onSongClick(Song clickedSong) {
-        if (getActivity() != null) {
-            Navigation.findNavController(getActivity(), R.id.fragment_home)
-                    .navigate(R.id.action_songsListFragment_to_songDetailsFragment);
-
-        }
+        SongsListFragmentDirections.ActionSongsListFragmentToSongDetailsFragment action =
+                SongsListFragmentDirections.actionSongsListFragmentToSongDetailsFragment(clickedSong);
+        action.setSongArgument(clickedSong);
+        Navigation.findNavController(mBinding.getRoot())
+                .navigate(action);
     }
 
     @Override
