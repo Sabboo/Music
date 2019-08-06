@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -30,6 +31,10 @@ public class VolleyRequestHelper {
     private Context context;
     private RequestQueue requestQueue;
     private OnRequestCompletedListener mRequestCompletedListener;
+
+    public VolleyRequestHelper(Context context) {
+        this.context = context;
+    }
 
     /**
      * Used to call web service and get response as JSON using post method.
@@ -101,5 +106,17 @@ public class VolleyRequestHelper {
             requestQueue.cancelAll(tag);
         }
     }
+
+    /**
+     * To get the ImageLoader class instance to load the network image in Image
+     * view.
+     *
+     * @return ImageLoader instance.
+     */
+    public ImageLoader getImageLoader() {
+        return new ImageLoader(getRequestQueue(),
+                new LruBitmapCache());
+    }
+
 
 }
