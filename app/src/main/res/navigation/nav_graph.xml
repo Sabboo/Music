@@ -3,10 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/songsListFragment">
+    app:startDestination="@id/updateTokenFragment">
     <fragment
         android:id="@+id/songsListFragment"
         android:name="com.example.music.presentation.songslist.SongsListFragment"
         android:label="fragment_songs_list"
         tools:layout="@layout/fragment_songs_list" />
+    <fragment
+        android:id="@+id/updateTokenFragment"
+        android:name="com.example.music.presentation.updatetoken.UpdateTokenFragment"
+        android:label="fragment_update_token"
+        tools:layout="@layout/fragment_update_token">
+        <action
+            android:id="@+id/action_updateTokenFragment_to_songsListFragment"
+            app:destination="@id/songsListFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
