@@ -29,6 +29,11 @@ public class UpdateTokenFragment extends Fragment implements UpdateTokenContract
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPresenter = new UpdateTokenPresenter(getContext(), this);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -36,8 +41,6 @@ public class UpdateTokenFragment extends Fragment implements UpdateTokenContract
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_update_token,
                 container, false);
         mBinding.setLifecycleOwner(getViewLifecycleOwner());
-
-        mPresenter = new UpdateTokenPresenter(getContext(), this);
 
         mPresenter.updateToken();
 

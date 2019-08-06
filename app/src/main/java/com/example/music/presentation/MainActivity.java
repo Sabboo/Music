@@ -8,6 +8,8 @@ import com.example.music.R;
 
 public class MainActivity extends AppCompatActivity {
 
+    public String query;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

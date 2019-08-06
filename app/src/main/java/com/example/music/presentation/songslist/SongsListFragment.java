@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +21,7 @@ import com.example.music.databinding.FragmentSongsListBinding;
 import com.example.music.helpers.ActivityUtils;
 import com.example.music.helpers.SharedPreferenceHelper;
 import com.example.music.model.Song;
+import com.example.music.presentation.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,11 @@ public class SongsListFragment extends Fragment implements SongsListContract.Vie
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPresenter = new SongsListPresenter(getContext(), this);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -46,10 +53,16 @@ public class SongsListFragment extends Fragment implements SongsListContract.Vie
                 container, false);
         mBinding.setLifecycleOwner(getViewLifecycleOwner());
 
-        mPresenter = new SongsListPresenter(getContext(), this);
+        // Trying to restore previous search query in case fragment transactions happened.
+        if (getActivity() != null) {
+            String query = ((MainActivity) getActivity()).query;
+            if (query != null)
+                mPresenter.loadSongs(query, SharedPreferenceHelper.getPrefKeyAccessToken(getContext()));
+        }
 
-        mBinding.rvSongs.setLayoutManager(
-                new GridLayoutManager(getContext(), 2, RecyclerView.VERTICAL, false));
+        if (mBinding.rvSongs.getLayoutManager() == null)
+            mBinding.rvSongs.setLayoutManager(
+                    new GridLayoutManager(getContext(), 2, RecyclerView.VERTICAL, false));
 
         return mBinding.getRoot();
     }
@@ -59,7 +72,6 @@ public class SongsListFragment extends Fragment implements SongsListContract.Vie
         super.onViewCreated(view, savedInstanceState);
         handleSearchEditTextQueries();
         handleNoInternetConnectionScreen();
-        mBinding.etSearch.requestFocus();
     }
 
     private void handleSearchEditTextQueries() {
@@ -81,6 +93,8 @@ public class SongsListFragment extends Fragment implements SongsListContract.Vie
 
     private void performSearch() {
         String searchQuery = mBinding.etSearch.getText().toString().trim();
+        if (getActivity() != null)
+            ((MainActivity) getActivity()).query = searchQuery;
         mPresenter.loadSongs(searchQuery, SharedPreferenceHelper.getPrefKeyAccessToken(getContext()));
     }
 
@@ -125,7 +139,11 @@ public class SongsListFragment extends Fragment implements SongsListContract.Vie
 
     @Override
     public void onSongClick(Song clickedSong) {
+        if (getActivity() != null) {
+            Navigation.findNavController(getActivity(), R.id.fragment_home)
+                    .navigate(R.id.action_songsListFragment_to_songDetailsFragment);
 
+        }
     }
 
     @Override
